@@ -1,13 +1,13 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#define MAXPAYLOAD 30000000
+#define MAXPAYLOAD 1000000
 #define INPUTMAXPAYLOAD 15 
 
 unsigned int answer[MAXPAYLOAD]={0};
 unsigned int calculation(unsigned int );
 struct data {
-	int input ;
+	unsigned int input ;
 	struct data *previous;
 
 };
@@ -66,34 +66,39 @@ unsigned int calculation (unsigned int input){
 	int ans=1;
 	
 	/*
-	 * create a circular linked list for every number in process
-	 */
-	struct data* first =malloc(sizeof(struct data));
-	first->input=input;
-	first->previous=NULL;
-	struct data * last=first,*temp;
-	/*
 	 * circulat linked list
 	 */
-	unsigned int loop ;
-	if(input%2==0){
-		/*input is even number 
-		 */
-		loop=input/2;	
-	}
-	else {
-		loop=input*3;
-		loop++;
-	}	
-
+	struct data * first=NULL,*last=NULL,*temp=NULL;
+	unsigned int loop =input;
+	int count =0;
 	while(loop!=1){
+
 		/*find out every number during the calculation 
-		 */
-		
-		temp=malloc(sizeof(struct data));
-		temp->input=input;
-		temp->previous=last;
-		last=temp;
+		 */	
+		if(loop<1000000 && answer[loop]!=0){
+			/*
+			 * the input is solved previously
+			 */
+			ans=answer[loop];
+			break;
+		}
+
+		if(first==NULL){
+			/* create a circular linked list for every number in process
+			 * if this is the first number
+			 */
+			first =malloc(sizeof(struct data));
+			first->input=loop;
+			first->previous=NULL;
+			last=first;
+		}
+
+		else {
+			temp=malloc(sizeof(struct data));
+			temp->input=loop;
+			temp->previous=last;
+			last=temp;
+		}
 
 		if(loop%2==0){
 			/*input is even number 
@@ -104,21 +109,15 @@ unsigned int calculation (unsigned int input){
 			loop*=3;
 			loop++;
 		}
-/*	
-		if(answer[loop]!=0){
-			//the input is solved previously
-			printf("Input is :%u\n",loop);
-			printf("The ans is :%u\n",answer[loop]);
-			ans=answer[loop];
-			break;
-		}
-		*/
+		count++;
 	}
-	
 	while(last!=NULL){
 		temp=last;
 		last=last->previous;
-		answer[temp->input]=++ans;
+		++ans;
+		if(temp->input<1000000){
+			answer[temp->input]=ans;
+		}
 		free(temp);
 	}
 	return answer[input];
