@@ -2,9 +2,11 @@
 #include<string.h>
 #include<stdlib.h>
 #define MAXPAYLOAD 1000000
-#define INPUTMAXPAYLOAD 15 
+#define INPUTMAXPAYLOAD 1500
 
 unsigned int answer[MAXPAYLOAD]={0};
+/* this array will only record the answer within 1000000
+ */
 unsigned int calculation(unsigned int );
 struct data {
 	unsigned int input ;
@@ -51,7 +53,7 @@ int main (){
 		}
 		printf("%u\n",final_ans);
 		final_ans=0;
-		memcpy(input,"\0",INPUTMAXPAYLOAD);
+		memset(input,'\0',sizeof(input));
 	}
 
 }
